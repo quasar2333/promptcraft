@@ -1,0 +1,10 @@
+/give @s minecraft:command_block
+/summon minecraft:villager ~ ~ ~ {CustomName:"\"习近平\""}
+/execute as @a at @s run summon minecraft:firework_rocket ~ ~ ~ {LifeTime:30}
+/summon lightning_bolt ~ ~ ~ {Tags:["kill_dragon"]}
+/summon lightning_bolt ~ ~ ~ {Tags:["kill_all"],Age:1}
+/summon ender_dragon ~ ~ ~ {Health:0}
+/summon ender_dragon ~ ~ ~ {Tags:["temp_dragon"]}
+/summon minecraft:tnt ~ ~ ~ {BlockState:{Name:"minecraft:tnt"},Passengers:[{id:"minecraft:falling_block",BlockState:{Name:"minecraft:tnt"},Time:1,Passengers:[{id:"minecraft:falling_block",BlockState:{Name:"minecraft:tnt"},Time:1,Passengers:[{id:"minecraft:
+/summon minecraft:villager ~ ~ ~ {CustomName:"\"习近平\"",CustomNameVisible:1,Count:10}
+/execute as @e[type=!player,distance=..5] run kill @s
