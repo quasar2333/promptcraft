@@ -121,8 +121,8 @@
 
 ## 📞 联系方式
 
-- **作者**: Ultimate_Kevin
 - **所有者**: Shy_Creeper
+- **作者**: Ultimate_Kevin
 - **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
 - **问题反馈**: [GitHub Issues](../../issues)
 
