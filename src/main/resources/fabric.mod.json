@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://space.bilibili.com/3493127828540221"
   },
-  "license": "All Rights Reserved",
+  "license": "GPL-3.0",
   "icon": "assets/promptcraft/icon.png",
   "environment": "*",
   "entrypoints": {

@@ -1,98 +1,91 @@
 # PromptCraft
 
-PromptCraft是一个Minecraft Fabric模组，通过集成SiliconFlow AI API在游戏中实现AI驱动的指令生成功能。
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green.svg)](https://minecraft.net)
+[![Fabric](https://img.shields.io/badge/Fabric-0.16.5+-orange.svg)](https://fabricmc.net)
+![icon.png](src/main/resources/assets/promptcraft/icon.png)
+**PromptCraft** 是一个 Minecraft Fabric 模组，通过调用 AI API 实现自动编写命令的功能。
 
-## 功能特性
+> **所有者**: Shy_Creeper
+>  **作者**: Ultimate_Kevin
+> **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
 
-### 核心功能
-- 🤖 **AI指令生成**: 通过SiliconFlow API调用AI模型生成Minecraft指令
-- 🔗 **多API支持**: 支持OpenAI和Google两种API调用格式
-- 🌐 **多语言支持**: 支持中文和英文输入及界面
-- ⚡ **实时生成**: 快速响应用户输入，生成相应的游戏指令
+## ✨ 功能特性
 
-### 用户界面
-- 🎮 **专用界面**: 按G键打开专用的AI指令生成界面
-- 📝 **输入框**: 中央位置的文本输入框，支持自然语言描述
-- 📋 **结果显示**: 清晰显示生成的指令内容
-- 🔄 **一键操作**: 复制和执行按钮，方便快速使用生成的指令
-- ⚙️ **配置管理**: 右上角配置按钮，管理API设置和黑名单
+### 🤖 AI 指令生成
+- 通过 SiliconFlow API 调用 AI 模型生成 Minecraft 指令
+- 支持自然语言描述，AI 自动转换为对应的游戏指令
+- 支持多种 AI 模型（DeepSeek-V3 等）
 
-### 权限与安全
-- 🛡️ **黑名单系统**: 关键词过滤，防止危险指令执行
-- 👥 **权限控制**: 
-  - 服务器环境：仅房主和管理员可修改黑名单
-  - 单机游戏：玩家默认可配置
-- 🔧 **指令类型**: 支持切换命令方块指令和普通指令模式
+### 🎮 用户界面
+- **快捷键**: 按 `G` 键打开 AI 指令生成界面
+- **输入框**: 支持中英文自然语言描述
+- **一键操作**: 生成、复制、执行指令
+- **ModMenu 集成**: 通过 ModMenu 管理配置
 
-## 安装要求
+### 🛡️ 安全防护
+- **黑名单系统**: 过滤危险关键词，防止恶意指令
+- **权限控制**: 服务器环境下的权限管理
+- **执行确认**: 可选的指令执行前确认
 
-- Minecraft 1.21.4
-- Fabric Loader 0.16.9+
-- Fabric API 0.110.5+
-- Java 21+
+## 📋 系统要求
 
-## 安装方法
+- **Minecraft**: 1.21.1
+- **Fabric Loader**: 0.16.5+
+- **Fabric API**: 0.102.0+1.21.1
+- **Java**: 21+
+- **ModMenu**: 推荐安装（可选）
 
-1. 确保已安装Fabric Loader和Fabric API
-2. 下载PromptCraft模组文件
-3. 将模组文件放入`.minecraft/mods`文件夹
+## 🚀 安装方法
+
+1. 确保已安装 **Fabric Loader** 和 **Fabric API**
+2. 从 [Releases](../../releases) 下载最新版本的 PromptCraft
+3. 将 `.jar` 文件放入 `.minecraft/mods` 文件夹
 4. 启动游戏
 
-## 配置说明
+## ⚙️ 配置说明
 
-### API配置
-首次使用需要配置以下信息：
-- **API密钥**: 从SiliconFlow获取的API密钥
-- **模型编号**: 选择要使用的AI模型（默认：deepseek-ai/DeepSeek-V3）
-- **基础URL**: API调用地址（默认：https://api.siliconflow.cn/v1）
+### API 配置
+首次使用需要配置 AI API：
 
-### 黑名单配置
-为了安全起见，模组内置了一些危险关键词的黑名单：
-- `rm`, `delete`, `format`, `shutdown`, `stop`
+1. **获取 API 密钥**: 从 [SiliconFlow](https://siliconflow.cn) 获取 API 密钥
+2. **游戏内配置**:
+   - 按 `G` 键打开界面，点击"配置"按钮
+   - 或通过 ModMenu 进入配置界面
+3. **填写信息**:
+   - **API 密钥**: 你的 SiliconFlow API 密钥
+   - **模型**: 推荐使用 `deepseek-ai/DeepSeek-V3`
+   - **API 地址**: `https://api.siliconflow.cn/v1`
 
-用户可以根据需要添加或删除黑名单关键词。
+### 安全设置
+- **黑名单**: 自动过滤危险关键词（如 `rm`, `delete`, `format` 等）
+- **执行确认**: 可开启指令执行前的确认对话框
+- **权限控制**: 服务器环境下的权限管理
 
-## 使用方法
+## 📖 使用方法
 
-1. **打开界面**: 按G键（可自定义）打开AI指令生成界面
-2. **输入描述**: 在输入框中用中文或英文描述你想要实现的功能
-3. **生成指令**: 点击"生成"按钮，等待AI生成相应的Minecraft指令
-4. **使用指令**: 
-   - 点击"复制"按钮复制指令到剪贴板
-   - 点击"执行"按钮直接在游戏中执行指令
+1. **打开界面**: 按 `G` 键打开 AI 指令生成界面
+2. **描述需求**: 用自然语言描述你想要实现的功能
+   ```
+   例如: "给我一把附魔钻石剑"
+   例如: "在我脚下生成一个村庄"
+   例如: "把天气改成雷雨"
+   ```
+3. **生成指令**: 点击"生成"按钮，等待 AI 生成指令
+4. **使用指令**:
+   - 点击"复制"复制到剪贴板
+   - 点击"执行"直接在游戏中运行
 
-## 开发信息
+## 🔧 开发信息
 
-### 项目结构
-```
-src/
-├── main/java/com/promptcraft/
-│   ├── PromptCraft.java              # 主模组类
-│   ├── api/SiliconFlowClient.java    # API客户端
-│   ├── config/ConfigManager.java     # 配置管理
-│   ├── network/NetworkHandler.java   # 网络处理
-│   └── util/
-│       ├── TestHelper.java          # 测试工具
-│       └── ErrorHandler.java        # 错误处理
-├── client/java/com/promptcraft/client/
-│   ├── PromptCraftClient.java        # 客户端初始化
-│   ├── api/ApiManager.java           # API管理器
-│   ├── gui/
-│   │   ├── PromptCraftScreen.java    # 主界面
-│   │   ├── ConfigScreen.java         # 配置界面
-│   │   ├── BlacklistScreen.java      # 黑名单配置界面
-│   │   └── ConfirmationScreen.java   # 确认对话框
-│   ├── network/ClientNetworkHandler.java # 客户端网络处理
-│   └── util/
-│       ├── LocalizationHelper.java  # 本地化助手
-│       └── PerformanceMonitor.java  # 性能监控
-└── main/resources/
-    ├── fabric.mod.json               # 模组元数据
-    ├── assets/promptcraft/lang/      # 语言文件
-    │   ├── en_us.json               # 英文
-    │   └── zh_cn.json               # 中文
-    └── promptcraft.mixins.json       # Mixin配置
-```
+### 技术栈
+- **Minecraft**: 1.21.1
+- **Fabric Loader**: 0.16.5+
+- **Fabric API**: 0.102.0+1.21.1
+- **Java**: 21+
+- **HTTP 客户端**: Java 内置
+- **JSON 处理**: Gson 2.10.1
+- **ModMenu**: 11.0.3（可选集成）
 
 ### 构建项目
 ```bash
@@ -105,61 +98,34 @@ src/
 ./gradlew runServer  # 运行服务器
 ```
 
-### 测试
-```bash
-# Windows
-build-and-test.bat
+## 📄 许可证
 
-# Linux/Mac
-chmod +x build-and-test.sh
-./build-and-test.sh
-```
+本项目采用 **GPL-3.0** 许可证：
+- ✅ **允许商用**: 可用于商业用途
+- ✅ **允许修改**: 可以修改和分发
+- ⚠️ **强制开源**: 任何基于此项目的衍生作品必须同样开源
+- ⚠️ **保留署名**: 必须保留原作者信息
 
-### 功能特性详细说明
+查看 [LICENSE](LICENSE) 文件了解完整条款。
 
-#### 🤖 AI指令生成
-- 支持自然语言输入，自动转换为Minecraft指令
-- 集成SiliconFlow API，支持多种AI模型
-- 智能指令验证和安全检查
-- 支持中英文输入
+## 🤝 贡献
 
-#### 🎮 用户界面
-- **主界面**: 简洁直观的指令生成界面
-- **配置界面**: 完整的API和模组设置
-- **黑名单管理**: 可视化的关键词管理
-- **确认对话框**: 安全的指令执行确认
+欢迎提交 Issue 和 Pull Request！
 
-#### ⌨️ 快捷键支持
-- `G`: 打开主界面
-- `Ctrl+G`: 快速生成模式
-- `Alt+G`: 切换命令方块模式
-- 所有快捷键均可自定义
+### 贡献指南
+1. Fork 本仓库
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
 
-#### 🛡️ 安全系统
-- **黑名单过滤**: 防止危险关键词执行
-- **权限控制**: 区分普通用户和管理员权限
-- **指令验证**: 多层安全检查
-- **执行确认**: 可选的执行前确认
+## 📞 联系方式
 
-#### 🌍 多语言支持
-- 完整的中英文界面
-- 自动语言检测
-- 本地化的错误消息和提示
+- **作者**: Ultimate_Kevin
+- **所有者**: Shy_Creeper
+- **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
+- **问题反馈**: [GitHub Issues](../../issues)
 
-#### ⚡ 性能优化
-- 异步API调用，不阻塞游戏
-- 内存使用监控
-- 性能统计和优化建议
-- 智能垃圾回收
+---
 
-## 许可证
-
-本项目采用MIT许可证 - 查看[LICENSE](LICENSE)文件了解详情。
-
-## 贡献
-
-欢迎提交Issue和Pull Request来改进这个项目！
-
-## 支持
-
-如果你遇到任何问题或有建议，请在GitHub上创建Issue。
+⭐ 如果这个项目对你有帮助，请给个 Star！
