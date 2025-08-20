@@ -6,9 +6,7 @@
 ![icon.png](src/main/resources/assets/promptcraft/icon.png)
 **PromptCraft** 是一个 Minecraft Fabric 模组，通过调用 AI API 实现自动编写命令的功能。
 
-> **所有者**: Shy_Creeper
 >  **作者**: Ultimate_Kevin
-> **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
 
 ## ✨ 功能特性
 
@@ -121,9 +119,7 @@
 
 ## 📞 联系方式
 
-- **所有者**: Shy_Creeper
-- **作者**: Ultimate_Kevin
-- **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
+- **作者邮箱**: quasar2333@gmail.com
 - **问题反馈**: [GitHub Issues](../../issues)
 
 ---
