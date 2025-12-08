@@ -19,39 +19,64 @@ public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve("promptcraft");
     private static final Path CONFIG_FILE = CONFIG_DIR.resolve("config.json");
-    
-    private static PromptCraftConfig config;
-    
+    private static final Path CONFIG_BACKUP = CONFIG_DIR.resolve("config.json.backup");
+
+    private static volatile PromptCraftConfig config;
+    private static final Object CONFIG_LOCK = new Object();
+
     public static void initialize() {
-        try {
-            // Create config directory if it doesn't exist
-            if (!Files.exists(CONFIG_DIR)) {
-                Files.createDirectories(CONFIG_DIR);
+        synchronized (CONFIG_LOCK) {
+            try {
+                // Create config directory if it doesn't exist
+                if (!Files.exists(CONFIG_DIR)) {
+                    Files.createDirectories(CONFIG_DIR);
+                }
+
+                // Load or create config
+                loadConfig();
+
+            } catch (IOException e) {
+                PromptCraft.LOGGER.error("Failed to initialize config", e);
+                config = new PromptCraftConfig(); // Use default config
             }
-            
-            // Load or create config
-            loadConfig();
-            
-        } catch (IOException e) {
-            PromptCraft.LOGGER.error("Failed to initialize config", e);
-            config = new PromptCraftConfig(); // Use default config
         }
     }
-    
+
     private static void loadConfig() throws IOException {
         if (Files.exists(CONFIG_FILE)) {
             try {
                 String json = Files.readString(CONFIG_FILE);
                 config = GSON.fromJson(json, PromptCraftConfig.class);
-                
+
                 // Validate config
                 if (config == null) {
                     config = new PromptCraftConfig();
                 }
-                
+
+                // Ensure blacklist is not null
+                if (config.blacklistedKeywords == null) {
+                    config.blacklistedKeywords = new ArrayList<>();
+                }
+
                 PromptCraft.LOGGER.info("Config loaded successfully");
             } catch (JsonSyntaxException e) {
-                PromptCraft.LOGGER.warn("Invalid config file, creating new one", e);
+                PromptCraft.LOGGER.warn("Invalid config file, attempting to restore from backup", e);
+
+                // Try to restore from backup
+                if (Files.exists(CONFIG_BACKUP)) {
+                    try {
+                        String backupJson = Files.readString(CONFIG_BACKUP);
+                        config = GSON.fromJson(backupJson, PromptCraftConfig.class);
+                        if (config != null) {
+                            PromptCraft.LOGGER.info("Config restored from backup successfully");
+                            saveConfig(); // Save the restored config
+                            return;
+                        }
+                    } catch (Exception backupError) {
+                        PromptCraft.LOGGER.warn("Failed to restore from backup", backupError);
+                    }
+                }
+
                 config = new PromptCraftConfig();
                 saveConfig();
             }
@@ -61,26 +86,48 @@ public class ConfigManager {
             PromptCraft.LOGGER.info("Created new config file");
         }
     }
-    
+
     public static void saveConfig() {
-        try {
-            String json = GSON.toJson(config);
-            Files.writeString(CONFIG_FILE, json);
-            PromptCraft.LOGGER.debug("Config saved successfully");
-        } catch (IOException e) {
-            PromptCraft.LOGGER.error("Failed to save config", e);
+        synchronized (CONFIG_LOCK) {
+            try {
+                // Create backup of existing config before saving
+                if (Files.exists(CONFIG_FILE)) {
+                    try {
+                        Files.copy(CONFIG_FILE, CONFIG_BACKUP,
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException backupError) {
+                        PromptCraft.LOGGER.warn("Failed to create config backup", backupError);
+                    }
+                }
+
+                String json = GSON.toJson(config);
+                Files.writeString(CONFIG_FILE, json);
+                PromptCraft.LOGGER.debug("Config saved successfully");
+            } catch (IOException e) {
+                PromptCraft.LOGGER.error("Failed to save config", e);
+            }
         }
     }
-    
+
     public static PromptCraftConfig getConfig() {
+        // Lazy initialization if config is null
+        if (config == null) {
+            synchronized (CONFIG_LOCK) {
+                if (config == null) {
+                    initialize();
+                }
+            }
+        }
         return config;
     }
-    
+
     public static void setConfig(PromptCraftConfig newConfig) {
-        config = newConfig;
-        saveConfig();
+        synchronized (CONFIG_LOCK) {
+            config = newConfig;
+            saveConfig();
+        }
     }
-    
+
     /**
      * Configuration class for PromptCraft
      */
@@ -98,15 +145,8 @@ public class ConfigManager {
         public int maxCommandLength = 1000;
 
         public PromptCraftConfig() {
-            // Initialize with default blacklisted keywords
-            blacklistedKeywords.add("rm");
-            blacklistedKeywords.add("delete");
-            blacklistedKeywords.add("format");
-            blacklistedKeywords.add("shutdown");
-            blacklistedKeywords.add("stop");
-            blacklistedKeywords.add("kill");
-            blacklistedKeywords.add("destroy");
-            blacklistedKeywords.add("clear");
+            // Initialize with empty blacklist by default
+            // Users can add keywords as needed through the GUI
         }
 
         /**
@@ -114,10 +154,10 @@ public class ConfigManager {
          */
         public boolean isValid() {
             return apiKey != null && !apiKey.trim().isEmpty() &&
-                   modelId != null && !modelId.trim().isEmpty() &&
-                   baseUrl != null && !baseUrl.trim().isEmpty() &&
-                   maxRetries > 0 && timeoutSeconds > 0 &&
-                   maxCommandLength > 0;
+                    modelId != null && !modelId.trim().isEmpty() &&
+                    baseUrl != null && !baseUrl.trim().isEmpty() &&
+                    maxRetries > 0 && timeoutSeconds > 0 &&
+                    maxCommandLength > 0;
         }
 
         /**

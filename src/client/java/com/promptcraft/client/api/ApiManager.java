@@ -15,27 +15,32 @@ import java.util.function.Consumer;
  * Manages API calls and provides client-side integration
  */
 public class ApiManager {
-    private static ApiManager instance;
+    private static volatile ApiManager instance;
+    private static final Object LOCK = new Object();
     private SiliconFlowClient apiClient;
-    
+
     private ApiManager() {
         this.apiClient = new SiliconFlowClient();
     }
-    
+
     public static ApiManager getInstance() {
         if (instance == null) {
-            instance = new ApiManager();
+            synchronized (LOCK) {
+                if (instance == null) {
+                    instance = new ApiManager();
+                }
+            }
         }
         return instance;
     }
-    
+
     /**
      * Refreshes the API client with current configuration
      */
     public void refreshClient() {
         this.apiClient = new SiliconFlowClient();
     }
-    
+
     /**
      * Generates a command asynchronously and calls the callback with the result
      */
@@ -46,12 +51,12 @@ public class ApiManager {
             callback.accept(new CommandResult(false, null, "Invalid configuration. Please check your API settings."));
             return;
         }
-        
+
         if (userInput == null || userInput.trim().isEmpty()) {
             callback.accept(new CommandResult(false, null, "Input cannot be empty."));
             return;
         }
-        
+
         // Log the request if logging is enabled
         if (config.enableLogging) {
             PromptCraft.LOGGER.info("Generating command for input: {}", userInput);
@@ -63,7 +68,7 @@ public class ApiManager {
 
         // Make API call
         CompletableFuture<SiliconFlowClient.ApiResponse> future = apiClient.generateCommand(userInput);
-        
+
         future.thenAccept(response -> {
             // End performance monitoring
             PerformanceMonitor.endTiming("api_call");
@@ -107,7 +112,7 @@ public class ApiManager {
             return null;
         });
     }
-    
+
     /**
      * Validates if a command is safe to execute
      */
@@ -115,52 +120,52 @@ public class ApiManager {
         if (command == null || command.trim().isEmpty()) {
             return false;
         }
-        
+
         command = command.trim();
-        
+
         // Must start with /
         if (!command.startsWith("/")) {
             return false;
         }
-        
+
         // Check against blacklist
         ConfigManager.PromptCraftConfig config = ConfigManager.getConfig();
         String lowerCommand = command.toLowerCase();
-        
+
         for (String keyword : config.blacklistedKeywords) {
             if (lowerCommand.contains(keyword.toLowerCase())) {
                 return false;
             }
         }
-        
+
         // Additional safety checks
         if (command.length() > config.maxCommandLength) {
             return false;
         }
-        
+
         // Check for potentially dangerous patterns
         String[] dangerousPatterns = {
-            "rm -rf",
-            "format",
-            "del /",
-            "shutdown",
-            "halt",
-            "reboot",
-            "kill -9",
-            "sudo rm",
-            "dd if=",
-            ":(){ :|:& };:"
+                "rm -rf",
+                "format",
+                "del /",
+                "shutdown",
+                "halt",
+                "reboot",
+                "kill -9",
+                "sudo rm",
+                "dd if=",
+                ":(){ :|:& };:"
         };
-        
+
         for (String pattern : dangerousPatterns) {
             if (lowerCommand.contains(pattern.toLowerCase())) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Shows a status message to the player
      */
@@ -176,7 +181,7 @@ public class ApiManager {
             client.player.sendMessage(text, false);
         }
     }
-    
+
     /**
      * Result of a command generation request
      */
@@ -184,21 +189,21 @@ public class ApiManager {
         private final boolean success;
         private final String command;
         private final String error;
-        
+
         public CommandResult(boolean success, String command, String error) {
             this.success = success;
             this.command = command;
             this.error = error;
         }
-        
+
         public boolean isSuccess() {
             return success;
         }
-        
+
         public String getCommand() {
             return command;
         }
-        
+
         public String getError() {
             return error;
         }

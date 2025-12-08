@@ -11,7 +11,6 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 /**
  * Handles server-side network packets
@@ -20,12 +19,12 @@ public class NetworkHandler {
 
     // Custom payload for command execution
     public record ExecuteCommandPayload(String command, boolean useCommandBlock) implements CustomPayload {
-        public static final CustomPayload.Id<ExecuteCommandPayload> ID = new CustomPayload.Id<>(PromptCraft.EXECUTE_COMMAND_PACKET);
+        public static final CustomPayload.Id<ExecuteCommandPayload> ID = new CustomPayload.Id<>(
+                PromptCraft.EXECUTE_COMMAND_PACKET);
         public static final PacketCodec<RegistryByteBuf, ExecuteCommandPayload> CODEC = PacketCodec.tuple(
-            PacketCodecs.STRING, ExecuteCommandPayload::command,
-            PacketCodecs.BOOL, ExecuteCommandPayload::useCommandBlock,
-            ExecuteCommandPayload::new
-        );
+                PacketCodecs.STRING, ExecuteCommandPayload::command,
+                PacketCodecs.BOOLEAN, ExecuteCommandPayload::useCommandBlock,
+                ExecuteCommandPayload::new);
 
         @Override
         public CustomPayload.Id<? extends CustomPayload> getId() {
@@ -35,18 +34,18 @@ public class NetworkHandler {
 
     // Custom payload for blacklist updates
     public record BlacklistUpdatePayload(java.util.List<String> keywords) implements CustomPayload {
-        public static final CustomPayload.Id<BlacklistUpdatePayload> ID = new CustomPayload.Id<>(PromptCraft.BLACKLIST_UPDATE_PACKET);
+        public static final CustomPayload.Id<BlacklistUpdatePayload> ID = new CustomPayload.Id<>(
+                PromptCraft.BLACKLIST_UPDATE_PACKET);
         public static final PacketCodec<RegistryByteBuf, BlacklistUpdatePayload> CODEC = PacketCodec.tuple(
-            PacketCodecs.STRING.collect(PacketCodecs.toList()), BlacklistUpdatePayload::keywords,
-            BlacklistUpdatePayload::new
-        );
+                PacketCodecs.STRING.collect(PacketCodecs.toList()), BlacklistUpdatePayload::keywords,
+                BlacklistUpdatePayload::new);
 
         @Override
         public CustomPayload.Id<? extends CustomPayload> getId() {
             return ID;
         }
     }
-    
+
     public static void registerServerHandlers() {
         // Register payload types
         PayloadTypeRegistry.playC2S().register(ExecuteCommandPayload.ID, ExecuteCommandPayload.CODEC);
@@ -73,7 +72,7 @@ public class NetworkHandler {
             }
         });
     }
-    
+
     private static void executeCommand(ServerPlayerEntity player, String command, boolean useCommandBlock) {
         try {
             // Validate command format
@@ -100,20 +99,18 @@ public class NetworkHandler {
             if (useCommandBlock) {
                 // Execute as command block (higher permission level)
                 player.getServer().getCommandManager().executeWithPrefix(
-                    player.getServer().getCommandSource().withLevel(2), command
-                );
+                        player.getServer().getCommandSource().withLevel(2), command);
             } else {
                 // Execute as player
                 player.getServer().getCommandManager().executeWithPrefix(
-                    player.getCommandSource(), command
-                );
+                        player.getCommandSource(), command);
             }
 
             // Log successful execution
             PromptCraft.LOGGER.info("Command executed by {} ({}): {}",
-                player.getName().getString(),
-                useCommandBlock ? "Command Block" : "Player",
-                command);
+                    player.getName().getString(),
+                    useCommandBlock ? "Command Block" : "Player",
+                    command);
 
             // Send success message to player
             player.sendMessage(Text.translatable("promptcraft.command.success"), false);
@@ -122,7 +119,7 @@ public class NetworkHandler {
             ErrorHandler.handleCommandError(command, e, player);
         }
     }
-    
+
     private static boolean isValidCommandFormat(String command) {
         if (command == null || command.trim().isEmpty()) {
             return false;
@@ -152,7 +149,7 @@ public class NetworkHandler {
     private static boolean isCommandBlacklisted(String command) {
         String lowerCommand = command.toLowerCase();
         return ConfigManager.getConfig().blacklistedKeywords.stream()
-            .anyMatch(keyword -> lowerCommand.contains(keyword.toLowerCase()));
+                .anyMatch(keyword -> lowerCommand.contains(keyword.toLowerCase()));
     }
 
     private static boolean hasCommandBlockPermission(ServerPlayerEntity player) {
@@ -164,6 +161,5 @@ public class NetworkHandler {
         // In multiplayer, require op level 2 or higher
         return player.hasPermissionLevel(2);
     }
-
 
 }

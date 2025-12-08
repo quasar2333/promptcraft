@@ -1,9 +1,6 @@
 {
   "key.promptcraft.open_gui": "打开AI指令界面",
-  "key.promptcraft.quick_generate": "快速生成 (Ctrl+G)",
-  "key.promptcraft.toggle_mode": "切换指令模式 (Alt+G)",
   "category.promptcraft.general": "PromptCraft",
-  
   "gui.promptcraft.title": "PromptCraft - AI指令生成器 by Shy_Creeper",
   "gui.promptcraft.input.placeholder": "描述你想在Minecraft中做什么...",
   "gui.promptcraft.generate": "生成",
@@ -14,7 +11,6 @@
   "gui.promptcraft.command_block": "命令方块: %s",
   "gui.promptcraft.generating": "正在生成指令...",
   "gui.promptcraft.result.placeholder": "生成的指令将显示在这里",
-  
   "gui.promptcraft.config.title": "PromptCraft 配置",
   "gui.promptcraft.config.api_key": "API密钥",
   "gui.promptcraft.config.model_id": "模型编号",
@@ -22,17 +18,14 @@
   "gui.promptcraft.config.timeout": "超时时间（秒）",
   "gui.promptcraft.config.save": "保存",
   "gui.promptcraft.config.cancel": "取消",
-  
   "gui.promptcraft.blacklist.title": "指令黑名单",
   "gui.promptcraft.blacklist.add": "添加关键词",
   "gui.promptcraft.blacklist.remove": "移除",
   "gui.promptcraft.blacklist.placeholder": "输入要加入黑名单的关键词...",
-
   "gui.promptcraft.confirm.title": "确认执行指令",
   "gui.promptcraft.confirm.message": "您确定要执行这个指令吗？",
   "gui.promptcraft.confirm.yes": "执行",
   "gui.promptcraft.confirm.no": "取消",
-  
   "promptcraft.command.blacklisted": "指令包含黑名单关键词，无法执行",
   "promptcraft.command.error": "执行指令时出错：%s",
   "promptcraft.command.invalid_format": "无效的指令格式",
@@ -45,16 +38,14 @@
   "promptcraft.api.invalid_response": "无效的API响应",
   "promptcraft.config.saved": "配置保存成功",
   "promptcraft.config.error": "保存配置时出错：%s",
-
   "promptcraft.status.generating": "正在生成指令...",
   "promptcraft.status.success": "指令生成成功",
   "promptcraft.status.failed": "指令生成失败",
-  "promptcraft.status.copied": "指令已复制到剪贴板",
+  "promptcraft.status.copied": "指令已复制到剪贴板！",
+  "promptcraft.status.command_sent": "指令已发送执行！",
   "promptcraft.status.mode_switched": "指令模式已切换为：%s",
-
   "promptcraft.mode.normal": "普通",
   "promptcraft.mode.command_block": "命令方块",
-
   "promptcraft.tooltip.api_key": "您的SiliconFlow API密钥",
   "promptcraft.tooltip.model_id": "用于生成的AI模型",
   "promptcraft.tooltip.base_url": "API端点URL",

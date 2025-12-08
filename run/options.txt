@@ -1,4 +1,4 @@
-version:3955
+version:4440
 ao:true
 biomeBlendRadius:2
 enableVsync:true
@@ -15,18 +15,21 @@ prioritizeChunkUpdates:0
 fullscreen:false
 gamma:0.5
 graphicsMode:1
-guiScale:4
+guiScale:0
 maxFps:120
+inactivityFpsLimit:"afk"
 mipmapLevels:4
 narrator:0
 particles:0
 reducedDebugInfo:false
 renderClouds:"true"
+cloudRange:128
 renderDistance:12
 simulationDistance:12
 screenEffectScale:1.0
 soundDevice:""
 autoJump:false
+rotateWithMinecart:false
 operatorItemsTab:false
 autoSuggestions:true
 chatColors:true
@@ -47,6 +50,7 @@ hideSplashTexts:false
 mouseSensitivity:0.5
 damageTiltStrength:1.0
 highContrast:false
+highContrastBlockOutline:false
 narratorHotkey:true
 resourcePacks:["fabric"]
 incompatibleResourcePacks:[]
@@ -78,7 +82,6 @@ glDebugVerbosity:1
 skipMultiplayerWarning:false
 hideMatchedNames:true
 joinedFirstServer:false
-hideBundleTutorial:false
 syncChunkWrites:true
 showAutosaveIndicator:true
 allowServerListing:true
@@ -87,6 +90,9 @@ panoramaScrollSpeed:1.0
 telemetryOptInExtra:false
 onboardAccessibility:false
 menuBackgroundBlurriness:5
+startedCleanly:true
+showNowPlayingToast:false
+musicFrequency:"DEFAULT"
 key_key.attack:key.mouse.left
 key_key.use:key.mouse.right
 key_key.forward:key.keyboard.w
@@ -112,6 +118,7 @@ key_key.swapOffhand:key.keyboard.f
 key_key.saveToolbarActivator:key.keyboard.c
 key_key.loadToolbarActivator:key.keyboard.x
 key_key.advancements:key.keyboard.l
+key_key.quickActions:key.keyboard.y
 key_key.hotbar.1:key.keyboard.1
 key_key.hotbar.2:key.keyboard.2
 key_key.hotbar.3:key.keyboard.3
@@ -122,8 +129,6 @@ key_key.hotbar.7:key.keyboard.7
 key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
 key_key.promptcraft.open_gui:key.keyboard.g
-key_key.promptcraft.quick_generate:key.keyboard.u
-key_key.promptcraft.toggle_mode:key.keyboard.y
 soundCategory_master:1.0
 soundCategory_music:1.0
 soundCategory_record:1.0
@@ -134,6 +139,7 @@ soundCategory_neutral:1.0
 soundCategory_player:1.0
 soundCategory_ambient:1.0
 soundCategory_voice:1.0
+soundCategory_ui:1.0
 modelPart_cape:true
 modelPart_jacket:true
 modelPart_left_sleeve:true

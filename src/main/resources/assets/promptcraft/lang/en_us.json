@@ -1,9 +1,6 @@
 {
   "key.promptcraft.open_gui": "Open AI Command Interface",
-  "key.promptcraft.quick_generate": "Quick Generate (Ctrl+G)",
-  "key.promptcraft.toggle_mode": "Toggle Command Mode (Alt+G)",
   "category.promptcraft.general": "PromptCraft",
-  
   "gui.promptcraft.title": "PromptCraft - AI Command Generator by Shy_Creeper",
   "gui.promptcraft.input.placeholder": "Describe what you want to do in Minecraft...",
   "gui.promptcraft.generate": "Generate",
@@ -14,7 +11,6 @@
   "gui.promptcraft.command_block": "Command Block: %s",
   "gui.promptcraft.generating": "Generating command...",
   "gui.promptcraft.result.placeholder": "Generated command will appear here",
-  
   "gui.promptcraft.config.title": "PromptCraft Configuration",
   "gui.promptcraft.config.api_key": "API Key",
   "gui.promptcraft.config.model_id": "Model ID",
@@ -22,17 +18,14 @@
   "gui.promptcraft.config.timeout": "Timeout (seconds)",
   "gui.promptcraft.config.save": "Save",
   "gui.promptcraft.config.cancel": "Cancel",
-  
   "gui.promptcraft.blacklist.title": "Command Blacklist",
   "gui.promptcraft.blacklist.add": "Add Keyword",
   "gui.promptcraft.blacklist.remove": "Remove",
   "gui.promptcraft.blacklist.placeholder": "Enter keyword to blacklist...",
-
   "gui.promptcraft.confirm.title": "Confirm Command Execution",
   "gui.promptcraft.confirm.message": "Are you sure you want to execute this command?",
   "gui.promptcraft.confirm.yes": "Execute",
   "gui.promptcraft.confirm.no": "Cancel",
-  
   "promptcraft.command.blacklisted": "Command contains blacklisted keywords and cannot be executed",
   "promptcraft.command.error": "Error executing command: %s",
   "promptcraft.command.invalid_format": "Invalid command format",
@@ -45,16 +38,14 @@
   "promptcraft.api.invalid_response": "Invalid API response",
   "promptcraft.config.saved": "Configuration saved successfully",
   "promptcraft.config.error": "Error saving configuration: %s",
-
   "promptcraft.status.generating": "Generating command...",
   "promptcraft.status.success": "Command generated successfully",
   "promptcraft.status.failed": "Failed to generate command",
-  "promptcraft.status.copied": "Command copied to clipboard",
+  "promptcraft.status.copied": "Command copied to clipboard!",
+  "promptcraft.status.command_sent": "Command sent for execution!",
   "promptcraft.status.mode_switched": "Command mode switched to: %s",
-
   "promptcraft.mode.normal": "Normal",
   "promptcraft.mode.command_block": "Command Block",
-
   "promptcraft.tooltip.api_key": "Your SiliconFlow API key",
   "promptcraft.tooltip.model_id": "AI model to use for generation",
   "promptcraft.tooltip.base_url": "API endpoint URL",

@@ -1,12 +1,14 @@
 # PromptCraft
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green.svg)](https://minecraft.net)
-[![Fabric](https://img.shields.io/badge/Fabric-0.16.5+-orange.svg)](https://fabricmc.net)
-![icon.png](src/main/resources/assets/promptcraft/icon.png)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.8-green.svg)](https://minecraft.net)
+[![Fabric](https://img.shields.io/badge/Fabric-0.17.2+-orange.svg)](https://fabricmc.net)
+
 **PromptCraft** 是一个 Minecraft Fabric 模组，通过调用 AI API 实现自动编写命令的功能。
 
->  **作者**: Ultimate_Kevin
+> **作者**: Ultimate_Kevin
+> **所有者**: Shy_Creeper
+> **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
 
 ## ✨ 功能特性
 
@@ -28,9 +30,9 @@
 
 ## 📋 系统要求
 
-- **Minecraft**: 1.21.1
-- **Fabric Loader**: 0.16.5+
-- **Fabric API**: 0.102.0+1.21.1
+- **Minecraft**: 1.21.8
+- **Fabric Loader**: 0.17.2+
+- **Fabric API**: 0.132.0+1.21.8
 - **Java**: 21+
 - **ModMenu**: 推荐安装（可选）
 
@@ -77,9 +79,9 @@
 ## 🔧 开发信息
 
 ### 技术栈
-- **Minecraft**: 1.21.1
-- **Fabric Loader**: 0.16.5+
-- **Fabric API**: 0.102.0+1.21.1
+- **Minecraft**: 1.21.8
+- **Fabric Loader**: 0.17.2+
+- **Fabric API**: 0.132.0+1.21.8
 - **Java**: 21+
 - **HTTP 客户端**: Java 内置
 - **JSON 处理**: Gson 2.10.1

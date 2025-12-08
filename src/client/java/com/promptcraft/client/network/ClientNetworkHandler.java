@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 
 /**
  * Handles client-side network packets
@@ -15,8 +14,10 @@ public class ClientNetworkHandler {
 
     // Config sync payload
     public record ConfigSyncPayload() implements CustomPayload {
-        public static final CustomPayload.Id<ConfigSyncPayload> ID = new CustomPayload.Id<>(PromptCraft.CONFIG_SYNC_PACKET);
-        public static final PacketCodec<RegistryByteBuf, ConfigSyncPayload> CODEC = PacketCodec.unit(new ConfigSyncPayload());
+        public static final CustomPayload.Id<ConfigSyncPayload> ID = new CustomPayload.Id<>(
+                PromptCraft.CONFIG_SYNC_PACKET);
+        public static final PacketCodec<RegistryByteBuf, ConfigSyncPayload> CODEC = PacketCodec
+                .unit(new ConfigSyncPayload());
 
         @Override
         public CustomPayload.Id<? extends CustomPayload> getId() {
