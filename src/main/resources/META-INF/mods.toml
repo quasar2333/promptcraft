@@ -1,0 +1,38 @@
+# This is an example mods.toml file for Forge 1.20.1
+
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL="https://github.com/shycreeper/PromptCraft/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+displayURL="https://space.bilibili.com/3493127828540221"
+logoFile="icon.png"
+credits="Created by Ultimate_Kevin, owned by Shy_Creeper"
+authors="${mod_authors}"
+description='''${mod_description}
+
+PromptCraft 是一个通过调用 AI API 实现自动编写命令的 Minecraft 模组。
+
+功能特性:
+- AI 指令生成
+- 自然语言转换为游戏命令
+- 安全防护黑名单系统
+'''
+
+[[dependencies.${mod_id}]]
+modId="forge"
+mandatory=true
+versionRange="${forge_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"

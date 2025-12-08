@@ -3,117 +3,166 @@ package com.promptcraft.network;
 import com.promptcraft.PromptCraft;
 import com.promptcraft.config.ConfigManager;
 import com.promptcraft.util.ErrorHandler;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
- * Handles server-side network packets
+ * Handles server-side network packets for Forge 1.20.1
  */
 public class NetworkHandler {
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(PromptCraft.MOD_ID, "main"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals);
 
-    // Custom payload for command execution
-    public record ExecuteCommandPayload(String command, boolean useCommandBlock) implements CustomPayload {
-        public static final CustomPayload.Id<ExecuteCommandPayload> ID = new CustomPayload.Id<>(
-                PromptCraft.EXECUTE_COMMAND_PACKET);
-        public static final PacketCodec<RegistryByteBuf, ExecuteCommandPayload> CODEC = PacketCodec.tuple(
-                PacketCodecs.STRING, ExecuteCommandPayload::command,
-                PacketCodecs.BOOLEAN, ExecuteCommandPayload::useCommandBlock,
-                ExecuteCommandPayload::new);
+    private static int packetId = 0;
 
-        @Override
-        public CustomPayload.Id<? extends CustomPayload> getId() {
-            return ID;
-        }
+    public static void register() {
+        INSTANCE.registerMessage(packetId++, ExecuteCommandPacket.class,
+                ExecuteCommandPacket::encode, ExecuteCommandPacket::decode,
+                ExecuteCommandPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+
+        INSTANCE.registerMessage(packetId++, BlacklistUpdatePacket.class,
+                BlacklistUpdatePacket::encode, BlacklistUpdatePacket::decode,
+                BlacklistUpdatePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+
+        PromptCraft.LOGGER.info("Network handlers registered");
     }
 
-    // Custom payload for blacklist updates
-    public record BlacklistUpdatePayload(java.util.List<String> keywords) implements CustomPayload {
-        public static final CustomPayload.Id<BlacklistUpdatePayload> ID = new CustomPayload.Id<>(
-                PromptCraft.BLACKLIST_UPDATE_PACKET);
-        public static final PacketCodec<RegistryByteBuf, BlacklistUpdatePayload> CODEC = PacketCodec.tuple(
-                PacketCodecs.STRING.collect(PacketCodecs.toList()), BlacklistUpdatePayload::keywords,
-                BlacklistUpdatePayload::new);
-
-        @Override
-        public CustomPayload.Id<? extends CustomPayload> getId() {
-            return ID;
-        }
+    // Send command to server
+    public static void sendExecuteCommand(String command, boolean useCommandBlock) {
+        INSTANCE.sendToServer(new ExecuteCommandPacket(command, useCommandBlock));
     }
 
-    public static void registerServerHandlers() {
-        // Register payload types
-        PayloadTypeRegistry.playC2S().register(ExecuteCommandPayload.ID, ExecuteCommandPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(BlacklistUpdatePayload.ID, BlacklistUpdatePayload.CODEC);
+    // Send blacklist update to server
+    public static void sendBlacklistUpdate(List<String> keywords) {
+        INSTANCE.sendToServer(new BlacklistUpdatePacket(keywords));
+    }
 
-        // Handle command execution requests from client
-        ServerPlayNetworking.registerGlobalReceiver(ExecuteCommandPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
-                executeCommand(context.player(), payload.command(), payload.useCommandBlock());
+    // ==================== Packet Classes ====================
+
+    /**
+     * Packet for command execution
+     */
+    public static class ExecuteCommandPacket {
+        private final String command;
+        private final boolean useCommandBlock;
+
+        public ExecuteCommandPacket(String command, boolean useCommandBlock) {
+            this.command = command;
+            this.useCommandBlock = useCommandBlock;
+        }
+
+        public static void encode(ExecuteCommandPacket packet, FriendlyByteBuf buf) {
+            buf.writeUtf(packet.command);
+            buf.writeBoolean(packet.useCommandBlock);
+        }
+
+        public static ExecuteCommandPacket decode(FriendlyByteBuf buf) {
+            return new ExecuteCommandPacket(buf.readUtf(), buf.readBoolean());
+        }
+
+        public static void handle(ExecuteCommandPacket packet, Supplier<NetworkEvent.Context> ctx) {
+            ctx.get().enqueueWork(() -> {
+                ServerPlayer player = ctx.get().getSender();
+                if (player != null) {
+                    executeCommand(player, packet.command, packet.useCommandBlock);
+                }
             });
-        });
-
-        // Handle blacklist update requests
-        ServerPlayNetworking.registerGlobalReceiver(BlacklistUpdatePayload.ID, (payload, context) -> {
-            ServerPlayerEntity player = context.player();
-            // Only allow ops to update blacklist in multiplayer
-            if (context.server().isSingleplayer() || player.hasPermissionLevel(2)) {
-                ConfigManager.PromptCraftConfig config = ConfigManager.getConfig();
-                config.blacklistedKeywords.clear();
-                config.blacklistedKeywords.addAll(payload.keywords());
-
-                ConfigManager.saveConfig();
-                PromptCraft.LOGGER.info("Blacklist updated by player: " + player.getName().getString());
-            }
-        });
+            ctx.get().setPacketHandled(true);
+        }
     }
 
-    private static void executeCommand(ServerPlayerEntity player, String command, boolean useCommandBlock) {
+    /**
+     * Packet for blacklist updates
+     */
+    public static class BlacklistUpdatePacket {
+        private final List<String> keywords;
+
+        public BlacklistUpdatePacket(List<String> keywords) {
+            this.keywords = keywords;
+        }
+
+        public static void encode(BlacklistUpdatePacket packet, FriendlyByteBuf buf) {
+            buf.writeInt(packet.keywords.size());
+            for (String keyword : packet.keywords) {
+                buf.writeUtf(keyword);
+            }
+        }
+
+        public static BlacklistUpdatePacket decode(FriendlyByteBuf buf) {
+            int size = buf.readInt();
+            List<String> keywords = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                keywords.add(buf.readUtf());
+            }
+            return new BlacklistUpdatePacket(keywords);
+        }
+
+        public static void handle(BlacklistUpdatePacket packet, Supplier<NetworkEvent.Context> ctx) {
+            ctx.get().enqueueWork(() -> {
+                ServerPlayer player = ctx.get().getSender();
+                if (player != null) {
+                    if (player.getServer().isSingleplayer() || player.hasPermissions(2)) {
+                        ConfigManager.PromptCraftConfig config = ConfigManager.getConfig();
+                        config.blacklistedKeywords.clear();
+                        config.blacklistedKeywords.addAll(packet.keywords);
+                        ConfigManager.saveConfig();
+                        PromptCraft.LOGGER.info("Blacklist updated by player: " + player.getName().getString());
+                    }
+                }
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
+    // ==================== Command Execution ====================
+
+    private static void executeCommand(ServerPlayer player, String command, boolean useCommandBlock) {
         try {
-            // Validate command format
             if (!isValidCommandFormat(command)) {
-                player.sendMessage(Text.translatable("promptcraft.command.invalid_format"), false);
+                player.sendSystemMessage(Component.translatable("promptcraft.command.invalid_format"));
                 return;
             }
 
-            // Check blacklist
             if (isCommandBlacklisted(command)) {
-                player.sendMessage(Text.translatable("promptcraft.command.blacklisted"), false);
+                player.sendSystemMessage(Component.translatable("promptcraft.command.blacklisted"));
                 return;
             }
 
-            // Check permissions for command block mode
             if (useCommandBlock && !hasCommandBlockPermission(player)) {
-                player.sendMessage(Text.translatable("promptcraft.command.no_permission"), false);
+                player.sendSystemMessage(Component.translatable("promptcraft.command.no_permission"));
                 return;
             }
 
-            // Only check blacklist - remove other safety restrictions
-
-            // Execute command
             if (useCommandBlock) {
-                // Execute as command block (higher permission level)
-                player.getServer().getCommandManager().executeWithPrefix(
-                        player.getServer().getCommandSource().withLevel(2), command);
+                player.getServer().getCommands().performPrefixedCommand(
+                        player.getServer().createCommandSourceStack().withPermission(2), command);
             } else {
-                // Execute as player
-                player.getServer().getCommandManager().executeWithPrefix(
-                        player.getCommandSource(), command);
+                player.getServer().getCommands().performPrefixedCommand(
+                        player.createCommandSourceStack(), command);
             }
 
-            // Log successful execution
             PromptCraft.LOGGER.info("Command executed by {} ({}): {}",
                     player.getName().getString(),
                     useCommandBlock ? "Command Block" : "Player",
                     command);
 
-            // Send success message to player
-            player.sendMessage(Text.translatable("promptcraft.command.success"), false);
+            player.sendSystemMessage(Component.translatable("promptcraft.command.success"));
 
         } catch (Exception e) {
             ErrorHandler.handleCommandError(command, e, player);
@@ -127,17 +176,14 @@ public class NetworkHandler {
 
         command = command.trim();
 
-        // Must start with /
         if (!command.startsWith("/")) {
             return false;
         }
 
-        // Must have at least one character after /
         if (command.length() <= 1) {
             return false;
         }
 
-        // Check for reasonable length
         ConfigManager.PromptCraftConfig config = ConfigManager.getConfig();
         if (command.length() > config.maxCommandLength) {
             return false;
@@ -152,14 +198,10 @@ public class NetworkHandler {
                 .anyMatch(keyword -> lowerCommand.contains(keyword.toLowerCase()));
     }
 
-    private static boolean hasCommandBlockPermission(ServerPlayerEntity player) {
-        // In single player, always allow
+    private static boolean hasCommandBlockPermission(ServerPlayer player) {
         if (player.getServer().isSingleplayer()) {
             return true;
         }
-
-        // In multiplayer, require op level 2 or higher
-        return player.hasPermissionLevel(2);
+        return player.hasPermissions(2);
     }
-
 }

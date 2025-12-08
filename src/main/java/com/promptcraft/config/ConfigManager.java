@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.promptcraft.PromptCraft;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages configuration for PromptCraft mod
+ * Manages configuration for PromptCraft mod (Forge 1.20.1)
  */
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve("promptcraft");
+    private static final Path CONFIG_DIR = FMLPaths.CONFIGDIR.get().resolve("promptcraft");
     private static final Path CONFIG_FILE = CONFIG_DIR.resolve("config.json");
     private static final Path CONFIG_BACKUP = CONFIG_DIR.resolve("config.json.backup");
 
@@ -27,17 +27,13 @@ public class ConfigManager {
     public static void initialize() {
         synchronized (CONFIG_LOCK) {
             try {
-                // Create config directory if it doesn't exist
                 if (!Files.exists(CONFIG_DIR)) {
                     Files.createDirectories(CONFIG_DIR);
                 }
-
-                // Load or create config
                 loadConfig();
-
             } catch (IOException e) {
                 PromptCraft.LOGGER.error("Failed to initialize config", e);
-                config = new PromptCraftConfig(); // Use default config
+                config = new PromptCraftConfig();
             }
         }
     }
@@ -48,12 +44,10 @@ public class ConfigManager {
                 String json = Files.readString(CONFIG_FILE);
                 config = GSON.fromJson(json, PromptCraftConfig.class);
 
-                // Validate config
                 if (config == null) {
                     config = new PromptCraftConfig();
                 }
 
-                // Ensure blacklist is not null
                 if (config.blacklistedKeywords == null) {
                     config.blacklistedKeywords = new ArrayList<>();
                 }
@@ -62,14 +56,13 @@ public class ConfigManager {
             } catch (JsonSyntaxException e) {
                 PromptCraft.LOGGER.warn("Invalid config file, attempting to restore from backup", e);
 
-                // Try to restore from backup
                 if (Files.exists(CONFIG_BACKUP)) {
                     try {
                         String backupJson = Files.readString(CONFIG_BACKUP);
                         config = GSON.fromJson(backupJson, PromptCraftConfig.class);
                         if (config != null) {
                             PromptCraft.LOGGER.info("Config restored from backup successfully");
-                            saveConfig(); // Save the restored config
+                            saveConfig();
                             return;
                         }
                     } catch (Exception backupError) {
@@ -90,7 +83,6 @@ public class ConfigManager {
     public static void saveConfig() {
         synchronized (CONFIG_LOCK) {
             try {
-                // Create backup of existing config before saving
                 if (Files.exists(CONFIG_FILE)) {
                     try {
                         Files.copy(CONFIG_FILE, CONFIG_BACKUP,
@@ -110,7 +102,6 @@ public class ConfigManager {
     }
 
     public static PromptCraftConfig getConfig() {
-        // Lazy initialization if config is null
         if (config == null) {
             synchronized (CONFIG_LOCK) {
                 if (config == null) {
@@ -128,9 +119,6 @@ public class ConfigManager {
         }
     }
 
-    /**
-     * Configuration class for PromptCraft
-     */
     public static class PromptCraftConfig {
         public String apiKey = "";
         public String modelId = "deepseek-ai/DeepSeek-V3";
@@ -139,19 +127,14 @@ public class ConfigManager {
         public List<String> blacklistedKeywords = new ArrayList<>();
         public int maxRetries = 3;
         public int timeoutSeconds = 30;
-        public String language = "auto"; // auto, en_us, zh_cn
+        public String language = "auto";
         public boolean enableLogging = true;
         public boolean requireConfirmation = true;
         public int maxCommandLength = 1000;
 
         public PromptCraftConfig() {
-            // Initialize with empty blacklist by default
-            // Users can add keywords as needed through the GUI
         }
 
-        /**
-         * Validates the configuration and returns true if valid
-         */
         public boolean isValid() {
             return apiKey != null && !apiKey.trim().isEmpty() &&
                     modelId != null && !modelId.trim().isEmpty() &&
@@ -160,12 +143,8 @@ public class ConfigManager {
                     maxCommandLength > 0;
         }
 
-        /**
-         * Gets the effective language setting
-         */
         public String getEffectiveLanguage() {
             if ("auto".equals(language)) {
-                // Try to detect system language
                 String systemLang = System.getProperty("user.language", "en");
                 return systemLang.equals("zh") ? "zh_cn" : "en_us";
             }
