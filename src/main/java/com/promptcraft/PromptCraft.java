@@ -11,7 +11,7 @@ import com.promptcraft.util.TestHelper;
 
 /**
  * PromptCraft - AI-powered command generation for Minecraft
- * Main mod initializer for server-side functionality
+ * Main mod initializer for server-side functionality (Fabric 1.20.x)
  */
 public class PromptCraft implements ModInitializer {
     public static final String MOD_ID = "promptcraft";
@@ -30,7 +30,7 @@ public class PromptCraft implements ModInitializer {
         ConfigManager.initialize();
 
         // Register network handlers
-        NetworkHandler.registerServerHandlers();
+        NetworkHandler.register();
 
         // Log system information
         TestHelper.logSystemInfo();

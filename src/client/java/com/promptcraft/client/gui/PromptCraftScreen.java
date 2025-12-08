@@ -236,8 +236,7 @@ public class PromptCraftScreen extends Screen {
 
     private void doExecuteCommand() {
         // Send command execution packet to server
-        ClientPlayNetworking.send(
-                new com.promptcraft.network.NetworkHandler.ExecuteCommandPayload(generatedCommand, useCommandBlocks));
+        com.promptcraft.client.network.ClientNetworkHandler.sendExecuteCommand(generatedCommand, useCommandBlocks);
 
         // Show feedback to user
         ApiManager.getInstance().showStatusMessage("Command sent for execution: " + generatedCommand, false);

@@ -1,38 +1,34 @@
 package com.promptcraft.client.network;
 
 import com.promptcraft.PromptCraft;
+import com.promptcraft.network.NetworkHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+
+import java.util.List;
 
 /**
- * Handles client-side network packets
+ * Handles client-side network packets for Fabric 1.20.x
  */
 public class ClientNetworkHandler {
 
-    // Config sync payload
-    public record ConfigSyncPayload() implements CustomPayload {
-        public static final CustomPayload.Id<ConfigSyncPayload> ID = new CustomPayload.Id<>(
-                PromptCraft.CONFIG_SYNC_PACKET);
-        public static final PacketCodec<RegistryByteBuf, ConfigSyncPayload> CODEC = PacketCodec
-                .unit(new ConfigSyncPayload());
-
-        @Override
-        public CustomPayload.Id<? extends CustomPayload> getId() {
-            return ID;
-        }
+    public static void registerClientHandlers() {
+        // Client-side registration (if needed for S2C packets)
+        PromptCraft.LOGGER.info("Client network handlers registered");
     }
 
-    public static void registerClientHandlers() {
-        // Register payload type
-        PayloadTypeRegistry.playS2C().register(ConfigSyncPayload.ID, ConfigSyncPayload.CODEC);
+    /**
+     * Sends an execute command packet to the server
+     */
+    public static void sendExecuteCommand(String command, boolean useCommandBlock) {
+        ClientPlayNetworking.send(NetworkHandler.EXECUTE_COMMAND_ID,
+                NetworkHandler.createExecuteCommandPacket(command, useCommandBlock));
+    }
 
-        // Handle config sync from server
-        ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPayload.ID, (payload, context) -> {
-            // Handle server config sync if needed
-            PromptCraft.LOGGER.debug("Received config sync from server");
-        });
+    /**
+     * Sends a blacklist update packet to the server
+     */
+    public static void sendBlacklistUpdate(List<String> keywords) {
+        ClientPlayNetworking.send(NetworkHandler.BLACKLIST_UPDATE_ID,
+                NetworkHandler.createBlacklistUpdatePacket(keywords));
     }
 }
