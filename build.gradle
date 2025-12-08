@@ -18,27 +18,14 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 runs {
     configureEach {
         systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        modSource project.sourceSets.main
     }
 
     client {
-        client()
-        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
     }
 
     server {
-        server()
-        programArgument '--nogui'
-        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
-    }
-
-    gameTestServer {
-        type = "gameTestServer"
-        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
-    }
-
-    data {
-        data()
-        programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        argument '--nogui'
     }
 }
 

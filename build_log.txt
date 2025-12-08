@@ -1,0 +1,82 @@
+﻿.\gradlew.bat : Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+所在位置 行:1 字符: 1
++ .\gradlew.bat build --no-daemon 2>&1 | Out-File -FilePath build_log.t ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Picked up JAVA_....encoding=UTF-8:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :cacheVersionManifest1.21.4
+> Task :cacheVersionExecutableClient1.21.4
+> Task :cacheVersionExecutableServer1.21.4
+> Task :cacheVersionMappingsClient1.21.4
+> Task :cacheVersionMappingsServer1.21.4
+> Task :neoFormListLibraries
+> Task :neoFormStripClient
+
+> Task :neoFormExtractServer
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+> Task :neoFormStripServer
+
+> Task :neoFormMerge
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+> Task :neoFormMergeMappings
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+> Task :neoFormRename
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+> Task :neoFormDecompile
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+> Task :neoFormApplyForgesAccessTransformer
+> Task :neoFormInject
+> Task :neoFormPatch
+> Task :neoFormPatchUserDev
+> Task :neoFormApplyOfficialMappings
+> Task :neoFormUnzipSources
+> Task :create1.21.4ClientExtraJar
+> Task :selectRawArtifactNg_dummy_ng.net.minecraft_client_1.21.4_client-extra
+
+> Task :neoFormRecompile
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+娉? 鏌愪簺杈撳叆鏂囦欢浣跨敤鎴栬鐩栦簡宸茶繃鏃剁殑 API銆?
+娉? 鏈夊叧璇︾粏淇℃伅, 璇蜂娇鐢?-Xlint:deprecation 閲嶆柊缂栬瘧銆?
+娉? 鏌愪簺杈撳叆鏂囦欢浣跨敤鎴栬鐩栦簡鏍囪涓哄緟鍒犻櫎鐨勫凡杩囨椂 API銆?
+娉? 鏈夊叧璇︾粏淇℃伅, 璇蜂娇鐢?-Xlint:removal 閲嶆柊缂栬瘧銆?
+娉? 鏌愪簺杈撳叆鏂囦欢浣跨敤浜嗘湭缁忔鏌ユ垨涓嶅畨鍏ㄧ殑鎿嶄綔銆?
+娉? 鏈夊叧璇︾粏淇℃伅, 璇蜂娇鐢?-Xlint:unchecked 閲嶆柊缂栬瘧銆?
+
+> Task :neoFormPackRecomp
+> Task :supplyRawJarForneoFormJoined1.21.4-20241203.161809
+> Task :selectRawArtifactNg_dummy_ng.net.neoforged_neoforge_21.4.132
+> Task :compileJava
+> Task :processResources
+> Task :classes
+> Task :jar
+> Task :jarJar SKIPPED
+> Task :assemble
+> Task :compileTestJava NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :test NO-SOURCE
+> Task :neoFormJoined1.21.4-20241203.161809DownloadAssets UP-TO-DATE
+> Task :neoFormJoined1.21.4-20241203.161809ExtractNatives
+> Task :writeMinecraftClasspathJunit
+> Task :testJunit NO-SOURCE
+> Task :check UP-TO-DATE
+> Task :build
+
+[Incubating] Problems report is available at: file:///D:/mcmodding/fabiric/PromptCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 5m 44s
+31 actionable tasks: 30 executed, 1 up-to-date
