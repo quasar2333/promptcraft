@@ -18,9 +18,9 @@ public class PromptCraft implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     // Network packet identifiers
-    public static final Identifier EXECUTE_COMMAND_PACKET = Identifier.of(MOD_ID, "execute_command");
-    public static final Identifier CONFIG_SYNC_PACKET = Identifier.of(MOD_ID, "config_sync");
-    public static final Identifier BLACKLIST_UPDATE_PACKET = Identifier.of(MOD_ID, "blacklist_update");
+    public static final Identifier EXECUTE_COMMAND_PACKET = new Identifier(MOD_ID, "execute_command");
+    public static final Identifier CONFIG_SYNC_PACKET = new Identifier(MOD_ID, "config_sync");
+    public static final Identifier BLACKLIST_UPDATE_PACKET = new Identifier(MOD_ID, "blacklist_update");
 
     @Override
     public void onInitialize() {
@@ -47,6 +47,6 @@ public class PromptCraft implements ModInitializer {
      * Creates an identifier with the mod's namespace
      */
     public static Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
+        return new Identifier(MOD_ID, path);
     }
 }

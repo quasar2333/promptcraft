@@ -4,11 +4,8 @@ import com.promptcraft.PromptCraft;
 import com.promptcraft.config.ConfigManager;
 import com.promptcraft.util.ErrorHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -22,8 +19,8 @@ import java.util.List;
 public class NetworkHandler {
 
     // Packet identifiers
-    public static final Identifier EXECUTE_COMMAND_ID = Identifier.of(PromptCraft.MOD_ID, "execute_command");
-    public static final Identifier BLACKLIST_UPDATE_ID = Identifier.of(PromptCraft.MOD_ID, "blacklist_update");
+    public static final Identifier EXECUTE_COMMAND_ID = new Identifier(PromptCraft.MOD_ID, "execute_command");
+    public static final Identifier BLACKLIST_UPDATE_ID = new Identifier(PromptCraft.MOD_ID, "blacklist_update");
 
     /**
      * Registers all server-side packet handlers
