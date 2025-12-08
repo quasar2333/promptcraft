@@ -4,24 +4,24 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-# IDE
+# IDE - IntelliJ IDEA
 .idea/
-.vscode/
 *.iml
 *.ipr
 *.iws
+out/
+.idea_modules/
 
-# Eclipse
+# IDE - VS Code
+.vscode/
+
+# IDE - Eclipse
 .project
 .classpath
 .settings/
 bin/
 
-# IntelliJ IDEA
-out/
-.idea_modules/
-
-# NetBeans
+# IDE - NetBeans
 nbproject/
 nbbuild/
 dist/
@@ -38,14 +38,25 @@ nbdist/
 # Windows
 ehthumbs.db
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 *.tmp
 *.temp
-*.log
 *.cache
 
-# Minecraft Development
+# Minecraft Development - Run directory
 run/
 !run/.gitkeep
+
+# Minecraft saves and world data
+*.mca
+*.mcr
+*.nbt
+*.dat
+*.dat_old
+saves/
+world/
+worlds/
 
 # Java
 *.class
@@ -53,20 +64,37 @@ run/
 !gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
-*.zip
-*.tar.gz
-*.rar
 hs_err_pid*
+replay_pid*
 
 # Logs
 logs/
 *.log
+*.log.gz
+
+# Archives (don't commit built artifacts)
+*.zip
+*.tar.gz
+*.rar
+*.7z
 
 # Temporary files
 *.swp
 *.swo
 *~
+*.bak
+*.backup
 
-# Fabric
+# Fabric / Loom
 remappedSrc/
 .fabric/
+**/loom-cache/
+
+# Error reports
+crash-reports/
+hs_err_pid*
+错误报告*.zip
+
+# User-specific files
+*.local
+local.properties
