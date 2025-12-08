@@ -1,52 +1,70 @@
 package com.promptcraft;
 
-import net.fabricmc.api.ModInitializer;
-import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.mojang.logging.LogUtils;
+import com.promptcraft.client.PromptCraftClient;
 import com.promptcraft.config.ConfigManager;
 import com.promptcraft.network.NetworkHandler;
-import com.promptcraft.util.TestHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import org.slf4j.Logger;
 
 /**
  * PromptCraft - AI-powered command generation for Minecraft
- * Main mod initializer for server-side functionality
+ * Main mod initializer for NeoForge
  */
-public class PromptCraft implements ModInitializer {
+@Mod(PromptCraft.MOD_ID)
+public class PromptCraft {
     public static final String MOD_ID = "promptcraft";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogUtils.getLogger();
 
-    // Network packet identifiers
-    public static final Identifier EXECUTE_COMMAND_PACKET = Identifier.of(MOD_ID, "execute_command");
-    public static final Identifier CONFIG_SYNC_PACKET = Identifier.of(MOD_ID, "config_sync");
-    public static final Identifier BLACKLIST_UPDATE_PACKET = Identifier.of(MOD_ID, "blacklist_update");
-
-    @Override
-    public void onInitialize() {
+    public PromptCraft(IEventBus modEventBus, ModContainer modContainer) {
         LOGGER.info("Initializing PromptCraft mod...");
 
-        // Initialize configuration system
-        ConfigManager.initialize();
+        // Register mod lifecycle events
+        modEventBus.addListener(this::commonSetup);
 
         // Register network handlers
-        NetworkHandler.registerServerHandlers();
+        NetworkHandler.register(modEventBus);
 
-        // Log system information
-        TestHelper.logSystemInfo();
+        LOGGER.info("PromptCraft mod constructor completed!");
+    }
 
-        // Run tests in development environment
-        if (Boolean.getBoolean("promptcraft.runTests")) {
-            TestHelper.runAllTests();
-        }
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        LOGGER.info("PromptCraft common setup...");
 
-        LOGGER.info("PromptCraft mod initialized successfully!");
+        // Initialize configuration system
+        event.enqueueWork(() -> {
+            ConfigManager.initialize();
+        });
+
+        LOGGER.info("PromptCraft common setup completed!");
     }
 
     /**
-     * Creates an identifier with the mod's namespace
+     * Creates a ResourceLocation with the mod's namespace
      */
-    public static Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    /**
+     * Client-side event subscriber
+     */
+    @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            LOGGER.info("PromptCraft client setup...");
+            PromptCraftClient.init();
+            LOGGER.info("PromptCraft client setup completed!");
+        }
     }
 }

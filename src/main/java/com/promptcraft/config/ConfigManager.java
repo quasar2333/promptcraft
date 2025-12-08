@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.promptcraft.PromptCraft;
-import net.fabricmc.loader.api.FabricLoader;
+import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve("promptcraft");
+    private static final Path CONFIG_DIR = FMLPaths.CONFIGDIR.get().resolve("promptcraft");
     private static final Path CONFIG_FILE = CONFIG_DIR.resolve("config.json");
     private static final Path CONFIG_BACKUP = CONFIG_DIR.resolve("config.json.backup");
 
