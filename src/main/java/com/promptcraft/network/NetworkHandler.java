@@ -3,7 +3,8 @@ package com.promptcraft.network;
 import com.promptcraft.PromptCraft;
 import com.promptcraft.config.ConfigManager;
 import com.promptcraft.util.ErrorHandler;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,35 +19,78 @@ import java.util.List;
  */
 public class NetworkHandler {
 
-    // Packet identifiers
-    public static final Identifier EXECUTE_COMMAND_ID = new Identifier(PromptCraft.MOD_ID, "execute_command");
-    public static final Identifier BLACKLIST_UPDATE_ID = new Identifier(PromptCraft.MOD_ID, "blacklist_update");
+    // Packet types
+    public static final PacketType<ExecuteCommandPacket> EXECUTE_COMMAND_TYPE = PacketType
+            .create(new Identifier(PromptCraft.MOD_ID, "execute_command"), ExecuteCommandPacket::new);
+    public static final PacketType<BlacklistUpdatePacket> BLACKLIST_UPDATE_TYPE = PacketType
+            .create(new Identifier(PromptCraft.MOD_ID, "blacklist_update"), BlacklistUpdatePacket::new);
+
+    // Execute command packet
+    public record ExecuteCommandPacket(String command, boolean useCommandBlock) implements FabricPacket {
+        public ExecuteCommandPacket(PacketByteBuf buf) {
+            this(buf.readString(), buf.readBoolean());
+        }
+
+        @Override
+        public void write(PacketByteBuf buf) {
+            buf.writeString(command);
+            buf.writeBoolean(useCommandBlock);
+        }
+
+        @Override
+        public PacketType<?> getType() {
+            return EXECUTE_COMMAND_TYPE;
+        }
+    }
+
+    // Blacklist update packet
+    public record BlacklistUpdatePacket(List<String> keywords) implements FabricPacket {
+        public BlacklistUpdatePacket(PacketByteBuf buf) {
+            this(readStringList(buf));
+        }
+
+        private static List<String> readStringList(PacketByteBuf buf) {
+            int size = buf.readInt();
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                list.add(buf.readString());
+            }
+            return list;
+        }
+
+        @Override
+        public void write(PacketByteBuf buf) {
+            buf.writeInt(keywords.size());
+            for (String keyword : keywords) {
+                buf.writeString(keyword);
+            }
+        }
+
+        @Override
+        public PacketType<?> getType() {
+            return BLACKLIST_UPDATE_TYPE;
+        }
+    }
 
     /**
      * Registers all server-side packet handlers
      */
     public static void register() {
         // Register execute command packet handler
-        ServerPlayNetworking.registerGlobalReceiver(EXECUTE_COMMAND_ID,
-                (server, player, handler, buf, responseSender) -> {
-                    String command = buf.readString();
-                    boolean useCommandBlock = buf.readBoolean();
-                    server.execute(() -> executeCommand(player, command, useCommandBlock));
+        ServerPlayNetworking.registerGlobalReceiver(EXECUTE_COMMAND_TYPE,
+                (packet, player, responseSender) -> {
+                    player.getServer()
+                            .execute(() -> executeCommand(player, packet.command(), packet.useCommandBlock()));
                 });
 
         // Register blacklist update packet handler
-        ServerPlayNetworking.registerGlobalReceiver(BLACKLIST_UPDATE_ID,
-                (server, player, handler, buf, responseSender) -> {
-                    int size = buf.readInt();
-                    List<String> keywords = new ArrayList<>();
-                    for (int i = 0; i < size; i++) {
-                        keywords.add(buf.readString());
-                    }
-                    server.execute(() -> {
-                        if (server.isSingleplayer() || player.hasPermissionLevel(2)) {
+        ServerPlayNetworking.registerGlobalReceiver(BLACKLIST_UPDATE_TYPE,
+                (packet, player, responseSender) -> {
+                    player.getServer().execute(() -> {
+                        if (player.getServer().isSingleplayer() || player.hasPermissionLevel(2)) {
                             ConfigManager.PromptCraftConfig config = ConfigManager.getConfig();
                             config.blacklistedKeywords.clear();
-                            config.blacklistedKeywords.addAll(keywords);
+                            config.blacklistedKeywords.addAll(packet.keywords());
                             ConfigManager.saveConfig();
                             PromptCraft.LOGGER.info("Blacklist updated by player: " + player.getName().getString());
                         }
@@ -54,28 +98,6 @@ public class NetworkHandler {
                 });
 
         PromptCraft.LOGGER.info("Network handlers registered");
-    }
-
-    /**
-     * Creates a packet buffer for execute command
-     */
-    public static PacketByteBuf createExecuteCommandPacket(String command, boolean useCommandBlock) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeString(command);
-        buf.writeBoolean(useCommandBlock);
-        return buf;
-    }
-
-    /**
-     * Creates a packet buffer for blacklist update
-     */
-    public static PacketByteBuf createBlacklistUpdatePacket(List<String> keywords) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(keywords.size());
-        for (String keyword : keywords) {
-            buf.writeString(keyword);
-        }
-        return buf;
     }
 
     // ==================== Command Execution ====================

@@ -20,15 +20,13 @@ public class ClientNetworkHandler {
      * Sends an execute command packet to the server
      */
     public static void sendExecuteCommand(String command, boolean useCommandBlock) {
-        ClientPlayNetworking.send(NetworkHandler.EXECUTE_COMMAND_ID,
-                NetworkHandler.createExecuteCommandPacket(command, useCommandBlock));
+        ClientPlayNetworking.send(new NetworkHandler.ExecuteCommandPacket(command, useCommandBlock));
     }
 
     /**
      * Sends a blacklist update packet to the server
      */
     public static void sendBlacklistUpdate(List<String> keywords) {
-        ClientPlayNetworking.send(NetworkHandler.BLACKLIST_UPDATE_ID,
-                NetworkHandler.createBlacklistUpdatePacket(keywords));
+        ClientPlayNetworking.send(new NetworkHandler.BlacklistUpdatePacket(keywords));
     }
 }
