@@ -154,7 +154,7 @@ public class TestHelper {
     public static void logSystemInfo() {
         PromptCraft.LOGGER.info("=== PromptCraft System Information ===");
         PromptCraft.LOGGER.info("Mod Version: 1.0.0");
-        PromptCraft.LOGGER.info("Minecraft Version: 1.21.8");
+        PromptCraft.LOGGER.info("Minecraft Version: 1.20.1");
         PromptCraft.LOGGER.info("Java Version: " + System.getProperty("java.version"));
         PromptCraft.LOGGER.info("OS: " + System.getProperty("os.name"));
 

@@ -1,8 +1,8 @@
 # PromptCraft
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.8-green.svg)](https://minecraft.net)
-[![Fabric](https://img.shields.io/badge/Fabric-0.17.2+-orange.svg)](https://fabricmc.net)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-green.svg)](https://minecraft.net)
+[![Fabric](https://img.shields.io/badge/Fabric-0.16.5+-orange.svg)](https://fabricmc.net)
 
 **PromptCraft** 是一个 Minecraft Fabric 模组，通过调用 AI API 实现自动编写命令的功能。
 
@@ -30,10 +30,10 @@
 
 ## 📋 系统要求
 
-- **Minecraft**: 1.21.8
-- **Fabric Loader**: 0.17.2+
-- **Fabric API**: 0.132.0+1.21.8
-- **Java**: 21+
+- **Minecraft**: 1.20.1
+- **Fabric Loader**: 0.16.5+
+- **Fabric API**: 0.92.2+1.20.1
+- **Java**: 17+
 - **ModMenu**: 推荐安装（可选）
 
 ## 🚀 安装方法
@@ -79,13 +79,13 @@
 ## 🔧 开发信息
 
 ### 技术栈
-- **Minecraft**: 1.21.8
-- **Fabric Loader**: 0.17.2+
-- **Fabric API**: 0.132.0+1.21.8
-- **Java**: 21+
+- **Minecraft**: 1.20.1
+- **Fabric Loader**: 0.16.5+
+- **Fabric API**: 0.92.2+1.20.1
+- **Java**: 17+
 - **HTTP 客户端**: Java 内置
 - **JSON 处理**: Gson 2.10.1
-- **ModMenu**: 11.0.3（可选集成）
+- **ModMenu**: 7.2.2（可选集成）
 
 ### 构建项目
 ```bash
