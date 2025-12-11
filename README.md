@@ -3,6 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.4-green.svg)](https://minecraft.net)
 [![NeoForge](https://img.shields.io/badge/NeoForge-21.4+-orange.svg)](https://neoforged.net)
+[![Build and Release](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml/badge.svg?branch=forge/1.21.x)](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml?query=branch%3Aforge%2F1.21.x)
 
 **PromptCraft** 是一个 Minecraft NeoForge 模组，通过调用 AI API 实现自动编写命令的功能。
 
@@ -17,7 +18,7 @@
 | Fabric | 1.21.x | [fabric/1.21.x](../../tree/fabric/1.21.x) | ✅ 可用 |
 | Fabric | 1.20.x | [fabric/1.20.x](../../tree/fabric/1.20.x) | ✅ 可用 |
 | NeoForge | 1.21.x | [forge/1.21.x](../../tree/forge/1.21.x) | ✅ 当前分支 |
-| Forge | 1.20.x | [forge/1.20.x](../../tree/forge/1.20.x) | 🚧 开发中 |
+| Forge | 1.20.x | [forge/1.20.x](../../tree/forge/1.20.x) | ✅ 可用 |
 
 ## ✨ 功能特性
 
