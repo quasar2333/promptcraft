@@ -3,6 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-green.svg)](https://minecraft.net)
 [![Forge](https://img.shields.io/badge/Forge-47.3+-orange.svg)](https://minecraftforge.net)
+[![Build and Release](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml/badge.svg?branch=forge/1.20.x)](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml?query=branch%3Aforge%2F1.20.x)
 
 **PromptCraft** 是一个 Minecraft Forge 模组，通过调用 AI API 实现自动编写命令的功能。
 
