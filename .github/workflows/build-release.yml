@@ -81,6 +81,9 @@ jobs:
           if [[ "$MC_VERSION_FULL" == 1.21* ]]; then
             JAVA_VERSION="21"
           fi
+          if [[ "$LOADER_TYPE" == "fabric" ]]; then
+            JAVA_VERSION="21"
+          fi
 
           echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
           echo "loader_type=$LOADER_TYPE" >> "$GITHUB_OUTPUT"
