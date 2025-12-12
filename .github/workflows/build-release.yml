@@ -110,7 +110,31 @@ jobs:
         run: chmod +x gradlew
       
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          set +e
+          ./gradlew build --no-daemon --stacktrace --warning-mode all 2>&1 | tee gradle-build.log
+          GRADLE_EXIT=${PIPESTATUS[0]}
+          set -e
+
+          if [[ $GRADLE_EXIT -ne 0 ]]; then
+            echo "::error title=Gradle build failed::Exit code $GRADLE_EXIT"
+
+            SUMMARY=$(grep -nE "^FAILURE:|^\* What went wrong:|^\* Exception is:|^Caused by:|Could not resolve|Could not (GET|HEAD)" gradle-build.log | head -n 30 || true)
+            if [[ -n "$SUMMARY" ]]; then
+              while IFS= read -r line; do
+                SHORT=$(echo "$line" | cut -c1-300)
+                echo "::error title=Gradle output::$SHORT"
+              done <<< "$SUMMARY"
+            fi
+
+            TAIL=$(tail -n 60 gradle-build.log | tr '\n' ' ' | cut -c1-800)
+            echo "::error title=Gradle tail::$TAIL"
+
+            exit $GRADLE_EXIT
+          fi
       
       - name: Find built JAR
         id: find_jar
