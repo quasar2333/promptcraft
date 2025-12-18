@@ -1,0 +1,6 @@
+  fabric/1.20.x b8152fa [origin/fabric/1.20.x] chore: synchronize smart improvements and cleanup
+  fabric/1.21.x ac1efa9 [origin/fabric/1.21.x] chore: optimize repo structure and make README a smart hub
+  forge/1.20.x  a865e7a [origin/forge/1.20.x] chore: synchronize smart improvements and cleanup
+  forge/1.21.x  4c686d6 [origin/forge/1.21.x] chore: synchronize smart improvements and cleanup
+* main          f8f772e [github/master: ahead 6, behind 3] chore: propagate smart improvements to main
+  master        394edf9 [github/master] chore: synchronize smart improvements and cleanup
