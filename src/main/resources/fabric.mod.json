@@ -8,7 +8,7 @@
     "Ultimate_Kevin"
   ],
   "contact": {
-    "homepage": "https://space.bilibili.com/3493127828540221"
+    "homepage": "https://github.com/quasar2333/promptcraft"
   },
   "license": "GPL-3.0",
   "icon": "assets/promptcraft/icon.png",
@@ -42,7 +42,7 @@
         "client"
       ],
       "links": {
-        "modmenu.homepage": "https://space.bilibili.com/3493127828540221"
+        "modmenu.homepage": "https://github.com/quasar2333/promptcraft"
       }
     }
   }
