@@ -4,7 +4,7 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
-issueTrackerURL="https://github.com/shycreeper/PromptCraft/issues"
+issueTrackerURL="https://github.com/quasar2333/promptcraft/issues"
 
 [[mods]]
 modId="${mod_id}"
@@ -13,7 +13,7 @@ displayName="${mod_name}"
 #updateJSONURL=""
 displayURL="https://space.bilibili.com/3493127828540221"
 logoFile="icon.png"
-credits="Created by Ultimate_Kevin, owned by Shy_Creeper"
+credits="Created by Ultimate_Kevin"
 authors="${mod_authors}"
 description='''${mod_description}
 
