@@ -8,7 +8,7 @@
 **PromptCraft** 是一个 Minecraft NeoForge 模组，通过调用 AI API 实现自动编写命令的功能。
 
 > **作者**: Ultimate_Kevin
-> **官方页面**: [B站空间](https://space.bilibili.com/3493127828540221)
+> **官方页面**: [GitHub 仓库](https://github.com/quasar2333/promptcraft)
 
 ## 🔗 多版本支持
 
