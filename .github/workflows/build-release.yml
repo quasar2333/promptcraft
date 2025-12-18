@@ -137,19 +137,42 @@ jobs:
       - name: Get current date
         id: date
         run: echo "date=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
-      
+
+      - name: Determine Tag Name
+        id: tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "name=${{ needs.build.outputs.loader_type }}-${{ needs.build.outputs.mc_version }}-latest" >> $GITHUB_OUTPUT
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cleanup old release (if not a version tag)
+        if: steps.tag.outputs.is_tag == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ steps.tag.outputs.name }}"
+          # Check if release exists
+          if gh release view "$TAG_NAME" > /dev/null 2>&1; then
+            echo "Deleting old rolling release: $TAG_NAME"
+            gh release delete "$TAG_NAME" -y --cleanup-tag
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.build.outputs.loader_type }}-${{ needs.build.outputs.mc_version }}-${{ steps.date.outputs.date }}
-          name: "${{ env.MOD_NAME }} ${{ env.MOD_VERSION }} - ${{ needs.build.outputs.loader_type }} ${{ needs.build.outputs.mc_version }}"
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: "${{ env.MOD_NAME }} ${{ env.MOD_VERSION }} - ${{ needs.build.outputs.loader_type }} ${{ needs.build.outputs.mc_version }}${{ steps.tag.outputs.is_tag == 'false' && ' (Latest Build)' || '' }}"
           body: |
             ## PromptCraft ${{ env.MOD_VERSION }}
             
             **分支**: `${{ needs.build.outputs.branch_name }}`
             **加载器**: ${{ needs.build.outputs.loader_type }}
             **Minecraft 版本**: ${{ needs.build.outputs.mc_version }}
-            **构建时间**: ${{ steps.date.outputs.date }}
+            **更新时间**: ${{ steps.date.outputs.date }}
             
             ### 安装说明
             1. 下载下方的 JAR 文件
@@ -161,6 +184,6 @@ jobs:
             自动构建 by GitHub Actions
           files: ./artifacts/*.jar
           draft: false
-          prerelease: false
+          prerelease: ${{ steps.tag.outputs.is_tag == 'false' }} 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
