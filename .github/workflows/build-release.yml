@@ -14,7 +14,7 @@ on:
       release:
         description: 'Create a release'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 env:
@@ -27,9 +27,9 @@ jobs:
     
     outputs:
       mod_file: ${{ steps.find_jar.outputs.mod_file }}
-      branch_name: ${{ steps.build_info.outputs.branch_name }}
-      loader_type: ${{ steps.build_info.outputs.loader_type }}
-      mc_version: ${{ steps.build_info.outputs.mc_version }}
+      branch_name: ${{ steps.branch_info.outputs.branch_name }}
+      loader_type: ${{ steps.branch_info.outputs.loader_type }}
+      mc_version: ${{ steps.branch_info.outputs.mc_version }}
     
     steps:
       - name: Checkout repository
@@ -37,74 +37,59 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Get build info
-        id: build_info
-        shell: bash
+      - name: Get branch info
+        id: branch_info
         run: |
-          set -euo pipefail
-
-          REF_TYPE="${GITHUB_REF_TYPE:-}" # branch / tag
-          REF_NAME="${GITHUB_REF_NAME:-}"
-
-          BRANCH_NAME="$REF_NAME"
-          if [[ "$REF_TYPE" == "tag" ]]; then
-            # Try to resolve which branch contains the tagged commit
-            RESOLVED_BRANCH=$(git branch -r --contains "$GITHUB_SHA" | sed 's#^ *##' | sed 's#^origin/##' | head -n 1 || true)
-            if [[ -n "$RESOLVED_BRANCH" ]]; then
-              BRANCH_NAME="$RESOLVED_BRANCH"
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+          # Determine loader type and MC version from branch name
+          if [[ "$BRANCH_NAME" == fabric/* ]]; then
+            LOADER_TYPE="fabric"
+          elif [[ "$BRANCH_NAME" == forge/* ]]; then
+            # Check if it's actually NeoForge (1.21.x)
+            if [[ "$BRANCH_NAME" == *"1.21"* ]]; then
+              LOADER_TYPE="neoforge"
             else
-              BRANCH_NAME="tag/$REF_NAME"
+              LOADER_TYPE="forge"
             fi
-          fi
-
-          # Read minecraft version from gradle.properties (shared key across fabric/forge/neoforge)
-          MC_VERSION_FULL=$(grep -E '^minecraft_version=' gradle.properties | head -n 1 | cut -d= -f2- | tr -d '\r')
-          if [[ -z "$MC_VERSION_FULL" ]]; then
-            echo "Error: minecraft_version not found in gradle.properties"
-            exit 1
-          fi
-
-          # Use major.minor for naming consistency (e.g. 1.20.1 -> 1.20)
-          MC_VERSION=$(echo "$MC_VERSION_FULL" | cut -d. -f1,2)
-
-          # Infer loader type from gradle.properties keys
-          if grep -qE '^neo_version=' gradle.properties; then
-            LOADER_TYPE="neoforge"
-          elif grep -qE '^forge_version=' gradle.properties; then
-            LOADER_TYPE="forge"
           else
             LOADER_TYPE="fabric"
           fi
-
-          # Infer Java version from Minecraft version
-          JAVA_VERSION="17"
-          if [[ "$MC_VERSION_FULL" == 1.21* ]]; then
-            JAVA_VERSION="21"
+          
+          if [[ "$BRANCH_NAME" == *"1.21"* ]]; then
+            MC_VERSION="1.21"
+          elif [[ "$BRANCH_NAME" == *"1.20"* ]]; then
+            MC_VERSION="1.20"
+          else
+            MC_VERSION="unknown"
           fi
-
-          echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
-          echo "loader_type=$LOADER_TYPE" >> "$GITHUB_OUTPUT"
-          echo "mc_version=$MC_VERSION" >> "$GITHUB_OUTPUT"
-          echo "java_version=$JAVA_VERSION" >> "$GITHUB_OUTPUT"
-
-          echo "Ref type: $REF_TYPE"
-          echo "Ref name: $REF_NAME"
+          
+          echo "loader_type=$LOADER_TYPE" >> $GITHUB_OUTPUT
+          echo "mc_version=$MC_VERSION" >> $GITHUB_OUTPUT
+          
           echo "Branch: $BRANCH_NAME"
           echo "Loader: $LOADER_TYPE"
-          echo "Minecraft version: $MC_VERSION_FULL"
-          echo "Java version: $JAVA_VERSION"
-
-      - name: Set up JDK
+          echo "MC Version: $MC_VERSION"
+      
+      - name: Set up JDK 21
+        if: contains(github.ref, '1.21')
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ steps.build_info.outputs.java_version }}
+          java-version: '21'
+          distribution: 'temurin'
+      
+      - name: Set up JDK 17
+        if: contains(github.ref, '1.20')
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
           distribution: 'temurin'
       
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: wrapper
-          cache-disabled: true
       
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -127,7 +112,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.MOD_NAME }}-${{ steps.build_info.outputs.loader_type }}-${{ steps.build_info.outputs.mc_version }}
+          name: ${{ env.MOD_NAME }}-${{ steps.branch_info.outputs.loader_type }}-${{ steps.branch_info.outputs.mc_version }}
           path: build/libs/*.jar
           retention-days: 30
 
@@ -152,19 +137,42 @@ jobs:
       - name: Get current date
         id: date
         run: echo "date=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
-      
+
+      - name: Determine Tag Name
+        id: tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "name=${{ needs.build.outputs.loader_type }}-${{ needs.build.outputs.mc_version }}-latest" >> $GITHUB_OUTPUT
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cleanup old release (if not a version tag)
+        if: steps.tag.outputs.is_tag == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ steps.tag.outputs.name }}"
+          # Check if release exists
+          if gh release view "$TAG_NAME" > /dev/null 2>&1; then
+            echo "Deleting old rolling release: $TAG_NAME"
+            gh release delete "$TAG_NAME" -y --cleanup-tag
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.build.outputs.loader_type }}-${{ needs.build.outputs.mc_version }}-${{ steps.date.outputs.date }}
-          name: "${{ env.MOD_NAME }} ${{ env.MOD_VERSION }} - ${{ needs.build.outputs.loader_type }} ${{ needs.build.outputs.mc_version }}"
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: "${{ env.MOD_NAME }} ${{ env.MOD_VERSION }} - ${{ needs.build.outputs.loader_type }} ${{ needs.build.outputs.mc_version }}${{ steps.tag.outputs.is_tag == 'false' && ' (Latest Build)' || '' }}"
           body: |
             ## PromptCraft ${{ env.MOD_VERSION }}
             
             **分支**: `${{ needs.build.outputs.branch_name }}`
             **加载器**: ${{ needs.build.outputs.loader_type }}
             **Minecraft 版本**: ${{ needs.build.outputs.mc_version }}
-            **构建时间**: ${{ steps.date.outputs.date }}
+            **更新时间**: ${{ steps.date.outputs.date }}
             
             ### 安装说明
             1. 下载下方的 JAR 文件
@@ -176,6 +184,6 @@ jobs:
             自动构建 by GitHub Actions
           files: ./artifacts/*.jar
           draft: false
-          prerelease: false
+          prerelease: ${{ steps.tag.outputs.is_tag == 'false' }} 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
