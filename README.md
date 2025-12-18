@@ -1,9 +1,9 @@
 # PromptCraft
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-green.svg)](https://minecraft.net)
-[![Fabric](https://img.shields.io/badge/Fabric-0.16.5+-orange.svg)](https://fabricmc.net)
-[![Build and Release](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml/badge.svg?branch=fabric/1.20.x)](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml?query=branch%3Afabric%2F1.20.x)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.8-green.svg)](https://minecraft.net)
+[![Fabric](https://img.shields.io/badge/Fabric-0.17.2+-orange.svg)](https://fabricmc.net)
+[![Build and Release](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml/badge.svg?branch=fabric/1.21.x)](https://github.com/quasar2333/promptcraft/actions/workflows/build-release.yml?query=branch%3Afabric%2F1.21.x)
 
 **PromptCraft** 是一个 Minecraft Fabric 模组，通过调用 AI API 实现自动编写命令的功能。
 
@@ -12,12 +12,12 @@
 
 ## 🔗 多版本支持
 
-| 模组加载器 | Minecraft 版本 | 分支 | 状态 |
-|-----------|---------------|------|------|
-| Fabric | 1.21.x | [fabric/1.21.x](../../tree/fabric/1.21.x) | ✅ 可用 |
-| Fabric | 1.20.x | [fabric/1.20.x](../../tree/fabric/1.20.x) | ✅ 当前分支 |
-| NeoForge | 1.21.x | [forge/1.21.x](../../tree/forge/1.21.x) | ✅ 可用 |
-| Forge | 1.20.x | [forge/1.20.x](../../tree/forge/1.20.x) | ✅ 可用 |
+| 模组加载器 | Minecraft 版本 | 分支 | 状态 | 最新下载 |
+|-----------|---------------|------|------|----------|
+| Fabric | 1.21.x | [fabric/1.21.x](../../tree/fabric/1.21.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/fabric-1.21-latest) |
+| Fabric | 1.20.x | [fabric/1.20.x](../../tree/fabric/1.20.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/fabric-1.20-latest) |
+| NeoForge | 1.21.x | [forge/1.21.x](../../tree/forge/1.21.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/neoforge-1.21-latest) |
+| Forge | 1.20.x | [forge/1.20.x](../../tree/forge/1.20.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/forge-1.20-latest) |
 
 ## ✨ 功能特性
 
@@ -39,10 +39,10 @@
 
 ## 📋 系统要求
 
-- **Minecraft**: 1.20.1
-- **Fabric Loader**: 0.16.5+
-- **Fabric API**: 0.92.2+1.20.1
-- **Java**: 17+
+- **Minecraft**: 1.21.8
+- **Fabric Loader**: 0.17.2+
+- **Fabric API**: 0.132.0+1.21.8
+- **Java**: 21+
 - **ModMenu**: 推荐安装（可选）
 
 ## 🚀 安装方法
@@ -88,13 +88,13 @@
 ## 🔧 开发信息
 
 ### 技术栈
-- **Minecraft**: 1.20.1
-- **Fabric Loader**: 0.16.5+
-- **Fabric API**: 0.92.2+1.20.1
-- **Java**: 17+
+- **Minecraft**: 1.21.8
+- **Fabric Loader**: 0.17.2+
+- **Fabric API**: 0.132.0+1.21.8
+- **Java**: 21+
 - **HTTP 客户端**: Java 内置
 - **JSON 处理**: Gson 2.10.1
-- **ModMenu**: 7.2.2（可选集成）
+- **ModMenu**: 11.0.3（可选集成）
 
 ### 构建项目
 ```bash
