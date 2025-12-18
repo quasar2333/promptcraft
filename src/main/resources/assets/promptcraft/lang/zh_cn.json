@@ -1,7 +1,7 @@
 {
   "key.promptcraft.open_gui": "打开AI指令界面",
   "category.promptcraft.general": "PromptCraft",
-  "gui.promptcraft.title": "PromptCraft - AI指令生成器 by Shy_Creeper",
+  "gui.promptcraft.title": "PromptCraft - AI指令生成器",
   "gui.promptcraft.input.placeholder": "描述你想在Minecraft中做什么...",
   "gui.promptcraft.generate": "生成",
   "gui.promptcraft.copy": "复制",

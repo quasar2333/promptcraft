@@ -5,7 +5,6 @@
   "name": "PromptCraft",
   "description": "AI-powered command generation mod using AI API | 通过调用AI API实现自动编写命令的模组",
   "authors": [
-    "Shy_Creeper",
     "Ultimate_Kevin"
   ],
   "contact": {
