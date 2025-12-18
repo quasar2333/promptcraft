@@ -12,12 +12,12 @@
 
 ## 🔗 多版本支持
 
-| 模组加载器 | Minecraft 版本 | 分支 | 状态 |
-|-----------|---------------|------|------|
-| Fabric | 1.21.x | [fabric/1.21.x](../../tree/fabric/1.21.x) | ✅ 当前分支 |
-| Fabric | 1.20.x | [fabric/1.20.x](../../tree/fabric/1.20.x) | ✅ 可用 |
-| NeoForge | 1.21.x | [forge/1.21.x](../../tree/forge/1.21.x) | ✅ 可用 |
-| Forge | 1.20.x | [forge/1.20.x](../../tree/forge/1.20.x) | ✅ 可用 |
+| 模组加载器 | Minecraft 版本 | 分支 | 状态 | 最新下载 |
+|-----------|---------------|------|------|----------|
+| Fabric | 1.21.x | [fabric/1.21.x](../../tree/fabric/1.21.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/fabric-1.21-latest) |
+| Fabric | 1.20.x | [fabric/1.20.x](../../tree/fabric/1.20.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/fabric-1.20-latest) |
+| NeoForge | 1.21.x | [forge/1.21.x](../../tree/forge/1.21.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/neoforge-1.21-latest) |
+| Forge | 1.20.x | [forge/1.20.x](../../tree/forge/1.20.x) | ✅ 稳定版 | [下载 JAR](../../releases/tag/forge-1.20-latest) |
 
 ## ✨ 功能特性
 

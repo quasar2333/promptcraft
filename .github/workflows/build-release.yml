@@ -14,7 +14,7 @@ on:
       release:
         description: 'Create a release'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 env:
